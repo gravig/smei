@@ -1,8 +1,8 @@
 {
-  "name": "calculator",
+  "name": "smei",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "index.ts",
   "scripts": {
     "test": "ts-node __tests__/run.ts"
   },
