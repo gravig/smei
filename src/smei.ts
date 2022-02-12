@@ -1,4 +1,6 @@
-import { Interpreter, Lexer, Parser } from ".";
+import Lexer from "./Lexer";
+import Interpreter from "./Interpreter";
+import Parser from "./Parser";
 
 export default class Smei {
   static eval = (source: string): number => {
