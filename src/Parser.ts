@@ -15,29 +15,34 @@ export default class Parser {
   }
 
   parse() {
-    const { tokens } = this;
-
     return this.expression();
   }
+
   isAtEnd(): boolean {
     return this.cursor >= this.tokens.length;
   }
+
   advance(): Token {
     return this.tokens[this.cursor++];
   }
+
   peek(): Token {
     return this.tokens[this.cursor];
   }
+
   next() {
     return this.tokens[this.cursor + 1];
   }
+
   previous() {
     return this.tokens[this.cursor - 1];
   }
+
   check(type: keyof typeof TokenType): boolean {
     if (this.isAtEnd()) return false;
     return this.peek().type === type;
   }
+
   match(...types: (keyof typeof TokenType)[]) {
     for (let type of types) {
       if (this.check(type)) {
@@ -47,16 +52,18 @@ export default class Parser {
     }
     return false;
   }
+
   consume(type: keyof typeof TokenType, message: string): Token {
     if (this.peek().type === type) return this.advance();
 
     throw new Error(message);
   }
 
-  expression() {
+  expression(): Expression {
     return this.term();
   }
-  term() {
+
+  term(): Expression {
     let left = this.factor();
 
     while (this.match("MINUS", "PLUS")) {
@@ -68,7 +75,7 @@ export default class Parser {
     return left;
   }
 
-  factor() {
+  factor(): Expression {
     let left = this.unary();
 
     while (this.match("STAR", "DIVIDE")) {
@@ -100,6 +107,6 @@ export default class Parser {
       return new Grouping(expression);
     }
 
-    throw new Error(`NN`);
+    throw new Error(`Could not parse expression.`);
   }
 }
