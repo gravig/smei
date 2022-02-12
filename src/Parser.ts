@@ -14,7 +14,7 @@ export default class Parser {
     this.tokens = tokens;
   }
 
-  parse() {
+  parse(): Expression {
     return this.expression();
   }
 
@@ -30,11 +30,11 @@ export default class Parser {
     return this.tokens[this.cursor];
   }
 
-  next() {
+  next(): Token {
     return this.tokens[this.cursor + 1];
   }
 
-  previous() {
+  previous(): Token {
     return this.tokens[this.cursor - 1];
   }
 
@@ -43,7 +43,7 @@ export default class Parser {
     return this.peek().type === type;
   }
 
-  match(...types: (keyof typeof TokenType)[]) {
+  match(...types: (keyof typeof TokenType)[]): boolean {
     for (let type of types) {
       if (this.check(type)) {
         this.advance();
