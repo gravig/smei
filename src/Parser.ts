@@ -98,7 +98,17 @@ export default class Parser {
 
   primary(): Expression {
     if (this.match("NUMBER")) {
-      return new Literal(Number(this.previous().lexeme));
+      const previous = Number(this.previous().lexeme);
+
+      if (this.match("LEFT_PAREN")) {
+        return new Binary({
+          left: new Literal(previous),
+          operator: new Token("STAR", "*", 1),
+          right: this.expression(),
+        });
+      } else {
+        return new Literal(previous);
+      }
     }
 
     if (this.match("LEFT_PAREN")) {

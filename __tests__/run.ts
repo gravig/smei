@@ -3,7 +3,7 @@ import Lexer from "../src/Lexer";
 import Parser from "../src/Parser";
 import Printer from "../src/Printer";
 
-const source = `(2+5)*4`;
+const source = `2(3+4)`;
 
 const lexer = new Lexer({ source });
 
