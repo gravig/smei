@@ -114,7 +114,24 @@ export default class Parser {
     if (this.match("LEFT_PAREN")) {
       const expression = this.expression();
       this.consume("RIGHT_PAREN", `Closing paren missing.`);
-      return new Grouping(expression);
+
+      const left = new Grouping(expression);
+
+      if (this.peek().type === "NUMBER") {
+        const right = this.unary();
+
+        return new Binary({ left, operator: new Token("STAR", "*", 1), right });
+      }
+
+      if (this.peek().type === "LEFT_PAREN") {
+        return new Binary({
+          left,
+          operator: new Token("STAR", "*", 1),
+          right: this.expression(),
+        });
+      }
+
+      return left;
     }
 
     throw new Error(`Could not parse expression.`);
