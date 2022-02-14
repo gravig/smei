@@ -15,6 +15,15 @@ Parser - converts tokens into AST.
 
 Interpreter - evaluates each tree node from bottom-up leading to result
 
+## Todo
+
+- Allow using standard functions (sin,cos,tan,ctan,etc.)
+- Allow defining own functions such as avg(...)
+- Allow working with scientific notation (eg. 1e+10 + 1e+6)
+- Fix problems with inaccuracy
+  - 0.1+0.2 = 0.30000000000000004 // should be 0.3
+  - 0.0000007\*0.0000007 = 4.899999999999999e-13) // should be 4.9e-13
+
 ## Tests
 
 ✔️ 3\*1/3 = 1  
