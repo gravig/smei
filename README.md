@@ -40,6 +40,7 @@ Interpreter - evaluates each tree node from bottom-up leading to result
 ✔️ (1)(2)(3)4 = 24  
 ✔️ 2(3)(4)(5) = 120  
 ✔️ (3)2(4)(5) = 120  
+✔️ 10000000\*1000000000000000000 = 1e+25
 ❌ 0.1+0.2 = 0.3 // 0.30000000000000004
 
 ## Sources:
