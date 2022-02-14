@@ -37,10 +37,9 @@ Interpreter - evaluates each tree node from bottom-up leading to result
 ✔️ (3)(4)(-5) = -60  
 ✔️ -(3)(4)(5) = -60  
 ✔️ 3\*(-1)/3 = -1  
-✔️ (1)(2)(3)4 = 24
-
-❌ "2(3)(4)(5)" = 120 // returns 6 instead  
-❌ "(3)2(4)(5)" = 120 // returns 24 instead
+✔️ (1)(2)(3)4 = 24  
+✔️ "2(3)(4)(5)" = 120  
+✔️ "(3)2(4)(5)" = 120
 
 ## Sources:
 

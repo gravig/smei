@@ -100,11 +100,13 @@ export default class Parser {
     if (this.match("NUMBER")) {
       const previous = Number(this.previous().lexeme);
 
-      if (this.match("LEFT_PAREN")) {
+      if (this.peek().type === "LEFT_PAREN") {
+        const right = this.expression();
+
         return new Binary({
           left: new Literal(previous),
           operator: new Token("STAR", "*", 1),
-          right: this.expression(),
+          right,
         });
       } else {
         return new Literal(previous);
