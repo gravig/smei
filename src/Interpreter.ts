@@ -6,7 +6,10 @@ import Unary from "./expressions/Unary";
 
 export default class Interpreter implements Visitor<number> {
   evaluate(expression: Expression): number {
-    return expression.accept(this);
+    const result = expression.accept(this);
+    const precision = result < 1 ? 15 : 11;
+
+    return parseFloat(result.toFixed(precision));
   }
 
   visitGrouping(expression: Grouping): number {

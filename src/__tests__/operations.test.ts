@@ -1,4 +1,4 @@
-import smei from "../src/smei";
+import smei from "../smei";
 
 describe("Interpreter", () => {
   const cases = [
@@ -15,6 +15,11 @@ describe("Interpreter", () => {
     ["2(3+4)", 14],
     ["(3+4)2", 14],
     ["(2+3)(3+4)", 35],
+    ["(2+3)*(3+4)", 35],
+    ["(2+3)+(3+4)", 12],
+    ["(2-3)-(3+4)", -8],
+    ["(2+3)/(4+5)", 0.555555555555556],
+    ["(2+3)-(2*3)+(1+2)+1", 3],
     ["3/4", 0.75],
     ["(1+2)(2+3)(3+4)", 105],
     ["(1)(2)(3)(4)", 24],
@@ -29,9 +34,11 @@ describe("Interpreter", () => {
     ["0.1+0.2", 0.3],
     ["0.20/0.5", 0.4],
     ["0.0000007*0.0000007", 4.9e-13],
+    ["16.08 * 100", 1608],
+    ["9999999999999999", 9999999999999999],
   ];
 
-  test.each(cases)("%p = %p", (expression: string, result) => {
+  test.each(cases)("%p = %p", (expression: string, result: number) => {
     expect(smei.eval(expression)).toEqual(result);
   });
 });

@@ -20,9 +20,7 @@ Interpreter - evaluates each tree node from bottom-up leading to result
 - Allow using standard functions (sin,cos,tan,ctan,etc.)
 - Allow defining own functions such as avg(...)
 - Allow working with scientific notation (eg. 1e+10 + 1e+6)
-- Fix problems with inaccuracy
-  - 0.1+0.2 = 0.30000000000000004 // should be 0.3
-  - 0.0000007\*0.0000007 = 4.899999999999999e-13) // should be 4.9e-13
+- Allow working with big numbers
 
 ## Tests
 
@@ -39,6 +37,11 @@ Interpreter - evaluates each tree node from bottom-up leading to result
 ✔️ 2(3+4) = 14  
 ✔️ (3+4)2 = 14  
 ✔️ (2+3)(3+4) = 35  
+✔️ (2+3)\*(3+4) = 35  
+✔️ (2+3)+(3+4) = 12  
+✔️ (2-3)-(3+4) = -8  
+✔️ (2+3)/(4+5) = 0.555555555555556  
+✔️ (2+3)-(2\*3)+(1+2)+1  
 ✔️ 3/4 = 0.75  
 ✔️ (1+2)(2+3)(3+4) = 105  
 ✔️ (1)(2)(3)(4) = 24  
@@ -50,7 +53,10 @@ Interpreter - evaluates each tree node from bottom-up leading to result
 ✔️ 2(3)(4)(5) = 120  
 ✔️ (3)2(4)(5) = 120  
 ✔️ 10000000\*1000000000000000000 = 1e+25  
-❌ 0.1+0.2 = 0.3 // 0.30000000000000004
+✔️ "0.20/0.5" = 0.4  
+✔️ 0.1+0.2 = 0.3  
+✔️ "0.0000007\*0.0000007" = 4.9e-13  
+❌ 9999999999999999 // 10000000000000000
 
 ## Sources:
 
