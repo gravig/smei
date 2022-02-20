@@ -1,5 +1,6 @@
 import Binary from "./expressions/Binary";
 import Expression, { Visitor } from "./expressions/Expression";
+import Fn from "./expressions/Fn";
 import Grouping from "./expressions/Grouping";
 import Literal from "./expressions/Literal";
 import Unary from "./expressions/Unary";
@@ -21,5 +22,8 @@ export default class Printer implements Visitor<string> {
   }
   visitGrouping(grouping: Grouping): string {
     return `GROUP(${grouping.group.accept(this)})`;
+  }
+  visitFn(expression: Fn): string {
+    return `FN{${expression.args.length}}`;
   }
 }

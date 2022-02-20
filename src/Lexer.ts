@@ -11,15 +11,25 @@ export default class Lexer {
     this.source = source;
   }
 
-  isEOF() {
+  public tokenize = () => {
+    while (!this.isEOF()) {
+      this.start = this.current;
+      this.scanToken();
+    }
+
+    this.tokens.push(new Token(TokenType.EOF, "", -1));
+    return this.tokens;
+  };
+
+  private isEOF = () => {
     return this.current >= this.source.length;
-  }
+  };
 
-  advance() {
+  private advance = () => {
     return this.source[this.current++];
-  }
+  };
 
-  addToken = (tokenType: keyof typeof TokenType, literal?: object) => {
+  private addToken = (tokenType: keyof typeof TokenType, literal?: object) => {
     const text = this.source.substring(this.start, this.current);
 
     this.tokens = [
@@ -28,27 +38,17 @@ export default class Lexer {
     ];
   };
 
-  tokenize() {
-    while (!this.isEOF()) {
-      this.start = this.current;
-      this.scanToken();
-    }
-
-    this.tokens.push(new Token(TokenType.EOF, "", -1));
-    return this.tokens;
-  }
-
-  peekNext = () => {
+  private peekNext = () => {
     if (this.current + 1 >= this.source.length) return "\0";
 
     return this.source[this.current + 1];
   };
 
-  peek = () => {
+  private peek = () => {
     return this.source[this.current];
   };
 
-  number = () => {
+  private number = () => {
     while (this.isDigit(this.peek())) {
       this.advance();
     }
@@ -66,18 +66,27 @@ export default class Lexer {
     this.addToken("NUMBER");
   };
 
-  isDigit = (char: string): boolean => {
+  private string = () => {
+    const keys = ["(", ")", ",", "-", "+", "*", "/", " ", "\r", "\t", "\n"];
+
+    while (!this.isEOF() && !keys.includes(this.peek())) {
+      this.advance();
+    }
+
+    this.addToken("STRING");
+  };
+
+  private isDigit = (char: string): boolean => {
     if (!Number.isNaN(Number(char))) {
       return true;
     }
     return false;
   };
 
-  scanToken() {
-    const { LEFT_PAREN, RIGHT_PAREN, COMMA, DOT, MINUS, PLUS, STAR, DIVIDE } =
+  private scanToken = () => {
+    const { LEFT_PAREN, RIGHT_PAREN, COMMA, MINUS, PLUS, STAR, DIVIDE } =
       TokenType;
     const { addToken } = this;
-    // consume next character
     const char = this.advance();
 
     switch (char) {
@@ -114,14 +123,10 @@ export default class Lexer {
         if (this.isDigit(char)) {
           this.number();
         } else {
-          throw new Error(
-            `Unexpected character '${this.source[this.current - 1]}'. Line: ${
-              this.line
-            } `
-          );
+          this.string();
         }
     }
-  }
+  };
 }
 
 export const TokenType = {
@@ -135,6 +140,7 @@ export const TokenType = {
   DIVIDE: "DIVIDE",
   NUMBER: "NUMBER",
   EOF: "EOF",
+  STRING: "STRING",
 } as const;
 
 type LexerArguments = {

@@ -5,6 +5,7 @@ import Expression from "./expressions/Expression";
 import Unary from "./expressions/Unary";
 import Binary from "./expressions/Binary";
 import Grouping from "./expressions/Grouping";
+import Fn from "./expressions/Fn";
 
 export default class Parser {
   private tokens: Token[] = [];
@@ -93,49 +94,43 @@ export default class Parser {
       const right = this.unary();
       return new Unary(operator, right);
     }
-    return this.primary();
+
+    return this.call();
+  }
+
+  call(): Expression {
+    const left = this.primary();
+
+    while (this.match("LEFT_PAREN")) {
+      const args = [];
+
+      if (!this.check("RIGHT_PAREN")) {
+        do {
+          args.push(this.expression());
+        } while (this.match("COMMA"));
+      }
+
+      return new Fn(left, args);
+    }
+
+    return left;
   }
 
   primary(): Expression {
-    if (this.match("NUMBER")) {
-      const previous = Number(this.previous().lexeme);
+    if (this.match("NUMBER", "STRING")) {
+      const previous = this.previous().lexeme;
 
-      if (this.peek().type === "LEFT_PAREN") {
-        const right = this.expression();
-
-        return new Binary({
-          left: new Literal(previous),
-          operator: new Token("STAR", "*", 1),
-          right,
-        });
-      } else {
-        return new Literal(previous);
-      }
+      return new Literal(previous);
     }
 
     if (this.match("LEFT_PAREN")) {
-      const expression = this.expression();
-      this.consume("RIGHT_PAREN", `Closing paren missing.`);
-
-      const left = new Grouping(expression);
-
-      if (this.peek().type === "NUMBER") {
-        const right = this.unary();
-
-        return new Binary({ left, operator: new Token("STAR", "*", 1), right });
-      }
-
-      if (this.peek().type === "LEFT_PAREN") {
-        return new Binary({
-          left,
-          operator: new Token("STAR", "*", 1),
-          right: this.expression(),
-        });
-      }
-
-      return left;
+      const expr = this.expression();
+      this.consume("RIGHT_PAREN", "Expect ')' after expression.");
+      return new Grouping(expr);
     }
 
-    throw new Error(`Could not parse expression.`);
+    throw new Error(
+      `Could not parse expression. ${this.peek().lexeme} ${this.peek().type}`
+    );
   }
 }
